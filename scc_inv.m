@@ -15,8 +15,9 @@ A = [0 1 0 0 0 0 0 0;
 0 0 0 0 0 0 0 1];
 
 % Randomize diagonal and multiply by eps to ensure invertability 
-A(logical(eye(size(A)))) = rand(size(A,1),1);
-D = eye(size(A)) - eps*A;
+A1 = A;
+A1(logical(eye(size(A)))) = rand(size(A,1),1);
+D = eye(size(A1)) - eps*A1;
 C = inv(D) > 0;
 SCC = C & C.';  % In the undirected (symmetric) case just take C.
 
@@ -34,6 +35,29 @@ for i = 1:size(compUniq,1)
     fprintf('SCC %d has nodes: ',compUniq(i)); disp(nodes.')
 end
 
+
+%% Sparse version
+A = sparse(A);
+
+A1(logical(eye(size(A)))) = rand(size(A,1),1);
+D = speye(size(A1)) - eps*A1;
+C = inv(D) > 0;
+SCC = C & C.';  % In the undirected (symmetric) case just take C.
+
+SCC
+
+%% Plot results
+% nodesPerRow = 4;
+% coordX = mod( (0:size(A)-1)', nodesPerRow);
+% coordY = floor( (0:size(A)-1)' ./ nodesPerRow);
+% coord = [coordX coordY];
+% gplot(A,coord)
+
+bgOrig = biograph( A & ~logical(eye(size(A))) );
+view(bgOrig);
+
+bgSCC = biograph( SCC & ~logical(eye(size(SCC))) );
+view(bgSCC);
 
 
 

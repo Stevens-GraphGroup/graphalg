@@ -37,3 +37,30 @@ for i = 1:size(compUniq,1)
     fprintf('SCC %d has nodes: ',compUniq(i)); disp(nodes.')
 end
 
+%% Sparse version
+A = sparse(A);
+
+tmp = speye(size(A));
+C = logical(tmp);
+for i = 1:size(A,1)
+    tmp = tmp*A;
+    C = C | tmp;
+end
+clear tmp;
+scc = C & C.';
+
+scc
+
+%% Plot results
+% nodesPerRow = 4;
+% coordX = mod( (0:size(A)-1)', nodesPerRow);
+% coordY = floor( (0:size(A)-1)' ./ nodesPerRow);
+% coord = [coordX coordY];
+% gplot(A,coord)
+
+bgOrig = biograph( A & ~logical(eye(size(A))) );
+view(bgOrig);
+
+bgSCC = biograph( scc & ~logical(eye(size(scc))) );
+view(bgSCC);
+

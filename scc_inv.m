@@ -38,8 +38,8 @@ end
 
 %% Sparse version
 A = sparse(A);
-
-A1(logical(eye(size(A)))) = rand(size(A,1),1);
+A1 = A;
+A1(logical(speye(size(A)))) = rand(size(A,1),1);
 D = speye(size(A1)) - eps*A1;
 C = inv(D) > 0;
 SCC = C & C.';  % In the undirected (symmetric) case just take C.
